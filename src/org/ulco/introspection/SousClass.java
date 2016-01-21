@@ -1,5 +1,7 @@
 package org.ulco.introspection;
 
+import org.ulco.GraphicsObject;
+
 import java.io.File;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
@@ -48,10 +50,10 @@ public class SousClass {
         return SousClasse;
     }
 
-    public static List<Method> classeAbtraite() throws ClassNotFoundException {
+    public static List<Method> classeAbtraite(String nom) throws ClassNotFoundException {
 
-        String nom = pack + "GraphicsObject";
-        Class classe = Class.forName(nom);
+        String nom2 = pack + nom;
+        Class classe = Class.forName(nom2);
         List<Method> methode = new ArrayList<>();
 
         if(Modifier.isAbstract(classe.getModifiers())){
@@ -70,6 +72,34 @@ public class SousClass {
         return methode;
     }
 
+    public static boolean complet(String nomClasse) throws ClassNotFoundException{
+
+        List<Method> methodesClassesAbstraites = classeAbtraite(nomClasse);
+
+        Class classeAVerifier = Class.forName(pack + "Triangle");
+        Method[] methodes = classeAVerifier.getMethods();
+
+        List<String> nomsMethodes = new ArrayList<>();
+        for(Method m : methodesClassesAbstraites){
+            nomsMethodes.add(m.getName());
+        }
+        System.out.println("---");
+
+        List<String> methodeAutreFonction = new ArrayList<>();
+        for(Method m : methodes){
+            methodeAutreFonction.add(m.getName());
+        }
+
+        boolean complet = true;
+        for(String s : methodeAutreFonction){
+            if (methodeAutreFonction.indexOf(s) == -1){
+                complet = false;
+            }
+        }
+
+        return complet;
+    }
+
     public static void main(String[] args) throws ClassNotFoundException{
         List<String> rep = listerFichier(new File("./src/org/ulco"));
         List<Class> sousClasse = creationListe(rep);
@@ -78,11 +108,16 @@ public class SousClass {
             System.out.println("GraphicsObject: " + cl.getName());
         }
 
-        List<Method> Methode = classeAbtraite();
+        List<Method> Methode = classeAbtraite("GraphicsObject");
         for (Method m : Methode){
             System.out.println(m.getName());
         }
 
+        boolean res = complet("GraphicsObject");
+
+                if(res){
+                    System.out.println("Toutes les méthodes de la classe mère sont implémentées dans la classe fille");
+                }
 
     }
 
