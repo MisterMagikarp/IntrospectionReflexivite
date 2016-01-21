@@ -3,8 +3,10 @@ package org.ulco.introspection;
 import org.ulco.GraphicsObject;
 
 import java.io.File;
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Method;
 import java.lang.reflect.Modifier;
+import java.lang.reflect.Parameter;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -100,6 +102,28 @@ public class SousClass {
         return complet;
     }
 
+    public static void exo4(List<String> nomClasse) throws ClassNotFoundException {
+        List<Class> sousClasses = SousClass.creationListe(nomClasse);
+
+        for(Class c : sousClasses) {
+            Constructor[] constructors = c.getConstructors();
+            for (Constructor cons : constructors) {
+                System.out.println(cons);
+
+                Parameter[] parameters = cons.getParameters();
+                for (Parameter p : parameters) {
+                    System.out.println(p);
+
+                }
+            }
+
+
+        }
+
+
+
+    }
+
     public static void main(String[] args) throws ClassNotFoundException{
         List<String> rep = listerFichier(new File("./src/org/ulco"));
         List<Class> sousClasse = creationListe(rep);
@@ -118,6 +142,8 @@ public class SousClass {
                 if(res){
                     System.out.println("Toutes les méthodes de la classe mère sont implémentées dans la classe fille");
                 }
+
+        exo4(rep);
 
     }
 
