@@ -1,6 +1,8 @@
 package org.ulco.introspection;
 
 import java.io.File;
+import java.lang.reflect.Method;
+import java.lang.reflect.Modifier;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,6 +11,7 @@ import java.util.List;
  */
 public class SousClass {
 
+    static String pack = "org.ulco.";
     Class lesClasses;
 
     public SousClass(String lesClasses) throws ClassNotFoundException {
@@ -26,7 +29,7 @@ public class SousClass {
           if (f.contains(".java")) {
               String str[] = f.split("\\.");
               listeFichier.add(str[0]);
-              //System.out.println(str[0]);
+
           }
       }
         return listeFichier;
@@ -45,6 +48,28 @@ public class SousClass {
         return SousClasse;
     }
 
+    public static List<Method> classeAbtraite() throws ClassNotFoundException {
+
+        String nom = pack + "GraphicsObject";
+        Class classe = Class.forName(nom);
+        List<Method> methode = new ArrayList<>();
+
+        if(Modifier.isAbstract(classe.getModifiers())){
+            Method[] champs = classe.getMethods();
+            for(Method m : champs){
+                if(Modifier.isAbstract((m.getModifiers()))) {
+                   // System.out.println("\t" + m.getName());
+                    methode.add(m);
+                }
+            }
+
+            }
+        else {
+            System.out.println("La classe n'est pas abstraite");
+        }
+        return methode;
+    }
+
     public static void main(String[] args) throws ClassNotFoundException{
         List<String> rep = listerFichier(new File("./src/org/ulco"));
         List<Class> sousClasse = creationListe(rep);
@@ -52,6 +77,13 @@ public class SousClass {
         for (Class cl: sousClasse){
             System.out.println("GraphicsObject: " + cl.getName());
         }
+
+        List<Method> Methode = classeAbtraite();
+        for (Method m : Methode){
+            System.out.println(m.getName());
+        }
+
+
     }
 
 
